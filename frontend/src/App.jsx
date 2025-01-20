@@ -1,32 +1,42 @@
 import Navbar from "./components/Navbar";
-import { Routes, Route, Navigate } from "react-router-dom";
+
 import HomePage from "./pages/HomePage";
 import SignUpPage from "./pages/SignUpPage";
 import LoginPage from "./pages/LoginPage";
 import SettingsPage from "./pages/SettingsPage";
 import ProfilePage from "./pages/ProfilePage";
-import { useAuthStore } from "./store/useAuthStory";
+
+import { Routes, Route, Navigate } from "react-router-dom";
+import { useAuthStore } from "./store/useAuthStore";
+import { useThemeStore } from "./store/useThemeStore";
 import { useEffect } from "react";
 
 import { Rotation } from "@icon-park/react";
+import { Toaster } from "react-hot-toast";
 
 const App = () => {
-  const { authUser, checkAuth, isCheckAuth } = useAuthStore();
+  const { authUser, checkAuth, isCheckingAuth, onlineUsers } = useAuthStore();
+  const { theme } = useThemeStore();
+
+  console.log({ onlineUsers });
 
   useEffect(() => {
     checkAuth();
   }, [checkAuth]);
+
   console.log({ authUser });
-  if (isCheckAuth && !authUser) {
+
+  if (isCheckingAuth && !authUser)
     return (
-      <div className="flex justify-center items-center h-screen">
-        <Rotation className="animate-spin" size="36" />
+      <div className="flex items-center justify-center h-screen">
+        <Rotation className="animate-spin" size={24} />
       </div>
     );
-  }
+
   return (
-    <>
+    <div data-theme={theme}>
       <Navbar />
+
       <Routes>
         <Route
           path="/"
@@ -46,7 +56,9 @@ const App = () => {
           element={authUser ? <ProfilePage /> : <Navigate to="/login" />}
         />
       </Routes>
-    </>
+
+      <Toaster />
+    </div>
   );
 };
 export default App;
