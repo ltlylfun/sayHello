@@ -1,11 +1,24 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useCallback } from "react";
 import { useChatStore } from "../store/useChatStore";
 import { Picture, Send, Close } from "@icon-park/react";
 import toast from "react-hot-toast";
 
+// 节流函数实现
+const throttle = (func, delay) => {
+  let lastCall = 0;
+  return (...args) => {
+    const now = Date.now();
+    if (now - lastCall >= delay) {
+      func(...args);
+      lastCall = now;
+    }
+  };
+};
+
 const MessageInput = () => {
   const [text, setText] = useState("");
   const [imagePreview, setImagePreview] = useState(null);
+  const [isSending, setIsSending] = useState(false);
   const fileInputRef = useRef(null);
   const { sendMessage } = useChatStore();
 
@@ -28,24 +41,40 @@ const MessageInput = () => {
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
-  const handleSendMessage = async (e) => {
-    e.preventDefault();
-    if (!text.trim() && !imagePreview) return;
+  const handleSendMessage = useCallback(
+    async (e) => {
+      e.preventDefault();
+      if (!text.trim() && !imagePreview) return;
+      if (isSending) return;
 
-    try {
-      await sendMessage({
-        text: text.trim(),
-        image: imagePreview,
-      });
+      try {
+        setIsSending(true);
+        await sendMessage({
+          text: text.trim(),
+          image: imagePreview,
+        });
 
-      // Clear form
-      setText("");
-      setImagePreview(null);
-      if (fileInputRef.current) fileInputRef.current.value = "";
-    } catch (error) {
-      console.error("Failed to send message:", error);
-    }
-  };
+        // Clear form
+        setText("");
+        setImagePreview(null);
+        if (fileInputRef.current) fileInputRef.current.value = "";
+      } catch (error) {
+        console.error("Failed to send message:", error);
+        toast.error("Failed to send message");
+      } finally {
+        setIsSending(false);
+      }
+    },
+    [text, imagePreview, isSending, sendMessage]
+  );
+
+  // 使用节流包装发送函数
+  const throttledSendMessage = useCallback(
+    (e) => {
+      throttle((evt) => handleSendMessage(evt), 1000)(e);
+    },
+    [handleSendMessage]
+  );
 
   return (
     <div className="p-4 w-full">
@@ -69,7 +98,7 @@ const MessageInput = () => {
         </div>
       )}
 
-      <form onSubmit={handleSendMessage} className="flex items-center gap-2">
+      <form onSubmit={throttledSendMessage} className="flex items-center gap-2">
         <div className="flex-1 flex gap-2">
           <input
             type="text"
@@ -98,7 +127,7 @@ const MessageInput = () => {
         <button
           type="submit"
           className="btn  btn-primary"
-          disabled={!text.trim() && !imagePreview}
+          disabled={(!text.trim() && !imagePreview) || isSending}
         >
           <Send size={22} />
         </button>
