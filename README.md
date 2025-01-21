@@ -1,7 +1,7 @@
 # ✨sayHello✨
 - 技术栈:MongoDB,Express,React,Node.js,Socket.io
 - 轻松与在线用户聊天
-![聊天](/聊天rontend/public/readme_png.png)
+![聊天](/frontend/public/readme_png.png)
 - 多种主题配色随意选择
 ![主题](/frontend/public/readme_png2.png)
 ### Setup .env file
