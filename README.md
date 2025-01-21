@@ -1,5 +1,5 @@
 # ✨sayHello✨
-- 技术栈：MERN（MongoDB、Express、React 和 Node ） + Socket.io + TailwindCSS + Daisy UI
+- 技术栈:MongoDB,Express,React,Node.js,Socket.io
 ![Demo App](/frontend/public/readme_png.png)
 ### Setup .env file
 
