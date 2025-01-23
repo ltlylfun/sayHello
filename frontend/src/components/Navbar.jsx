@@ -30,7 +30,7 @@ const Navbar = () => {
               btn btn-sm gap-2 transition-colors
               `}
             >
-              <Setting className="w-4 h-4" size={16} />
+              <Setting />
               <span className="hidden sm:inline">主题设置</span>
             </Link>
 
@@ -41,8 +41,11 @@ const Navbar = () => {
                   <span className="hidden sm:inline">个人主页</span>
                 </Link>
 
-                <button className="flex gap-2 items-center" onClick={logout}>
-                  <Logout className="size-5" />
+                <button
+                  className="flex btn btn-sm gap-2 items-center"
+                  onClick={logout}
+                >
+                  <Logout />
                   <span className="hidden sm:inline">退出</span>
                 </button>
               </>
