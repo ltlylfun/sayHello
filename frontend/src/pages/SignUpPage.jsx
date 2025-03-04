@@ -25,13 +25,13 @@ const SignUpPage = () => {
   const { signup, isSigningUp } = useAuthStore();
 
   const validateForm = () => {
-    if (!formData.fullName.trim()) return toast.error("Full name is required");
-    if (!formData.email.trim()) return toast.error("Email is required");
+    if (!formData.fullName.trim()) return toast.error("Full name 需要填写");
+    if (!formData.email.trim()) return toast.error("Email 需要填写");
     if (!/\S+@\S+\.\S+/.test(formData.email))
       return toast.error("Invalid email format");
-    if (!formData.password) return toast.error("Password is required");
+    if (!formData.password) return toast.error("Password 需要填写");
     if (formData.password.length < 6)
-      return toast.error("Password must be at least 6 characters");
+      return toast.error("Password 至少6个字符");
 
     return true;
   };
