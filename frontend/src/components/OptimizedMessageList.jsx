@@ -1,4 +1,10 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  useImperativeHandle,
+} from "react";
 import PropTypes from "prop-types";
 import { useAuthStore } from "../store/useAuthStore";
 import { formatMessageTime } from "../lib/utils";
@@ -9,6 +15,7 @@ const OptimizedMessageList = ({
   onLoadMore,
   hasNextPage,
   isLoadingMore,
+  scrollToBottomRef,
 }) => {
   const { authUser } = useAuthStore();
   const containerRef = useRef(null);
@@ -98,6 +105,14 @@ const OptimizedMessageList = ({
       containerRef.current.scrollTop = containerRef.current.scrollHeight;
     }
   }, []);
+
+  useImperativeHandle(
+    scrollToBottomRef,
+    () => ({
+      scrollToBottom,
+    }),
+    [scrollToBottom]
+  );
 
   useEffect(() => {
     if (selectedUser?._id && selectedUser._id !== currentUserId) {
@@ -245,6 +260,7 @@ OptimizedMessageList.propTypes = {
   onLoadMore: PropTypes.func.isRequired,
   hasNextPage: PropTypes.bool.isRequired,
   isLoadingMore: PropTypes.bool.isRequired,
+  scrollToBottomRef: PropTypes.object,
 };
 
 export default OptimizedMessageList;

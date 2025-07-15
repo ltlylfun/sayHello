@@ -87,7 +87,6 @@ export const useChatStore = create((set, get) => ({
         messageCacheManager.set(userId, page, limit, res.data);
 
         if (page === 1) {
-          // If it's the first page, replace all messages
           set({
             messages: res.data.messages,
             pagination: res.data.pagination,
@@ -166,7 +165,7 @@ export const useChatStore = create((set, get) => ({
       return [];
     }
   },
-  sendMessage: async (messageData) => {
+  sendMessage: async (messageData, onMessageSent) => {
     const { selectedUser, messages } = get();
     try {
       const res = await axiosInstance.post(
@@ -179,6 +178,11 @@ export const useChatStore = create((set, get) => ({
 
       // 更新缓存中的消息
       messageCacheManager.updateWithNewMessage(selectedUser._id, res.data);
+
+      // 触发滚动到底部的回调
+      if (onMessageSent) {
+        onMessageSent();
+      }
     } catch (error) {
       toast.error(error.response.data.message);
     }

@@ -1,4 +1,5 @@
 import { useRef, useState, useCallback } from "react";
+import PropTypes from "prop-types";
 import { useChatStore } from "../store/useChatStore";
 import { Picture, Send, Close } from "@icon-park/react";
 import toast from "react-hot-toast";
@@ -14,7 +15,7 @@ const throttle = (func, delay) => {
   };
 };
 
-const MessageInput = () => {
+const MessageInput = ({ scrollToBottomRef }) => {
   const [text, setText] = useState("");
   const [imagePreview, setImagePreview] = useState(null);
   const [isSending, setIsSending] = useState(false);
@@ -48,10 +49,21 @@ const MessageInput = () => {
 
       try {
         setIsSending(true);
-        await sendMessage({
-          text: text.trim(),
-          image: imagePreview,
-        });
+        await sendMessage(
+          {
+            text: text.trim(),
+            image: imagePreview,
+          },
+          // 发送消息后滚动到底部的回调
+          () => {
+            if (scrollToBottomRef?.current?.scrollToBottom) {
+              // 使用 setTimeout 确保消息已经渲染到 DOM 中
+              setTimeout(() => {
+                scrollToBottomRef.current.scrollToBottom();
+              }, 100);
+            }
+          }
+        );
 
         setText("");
         setImagePreview(null);
@@ -63,7 +75,7 @@ const MessageInput = () => {
         setIsSending(false);
       }
     },
-    [text, imagePreview, isSending, sendMessage]
+    [text, imagePreview, isSending, sendMessage, scrollToBottomRef]
   );
 
   const throttledSendMessage = useCallback(
@@ -132,4 +144,9 @@ const MessageInput = () => {
     </div>
   );
 };
+
+MessageInput.propTypes = {
+  scrollToBottomRef: PropTypes.object,
+};
+
 export default MessageInput;
