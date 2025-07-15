@@ -1,0 +1,130 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 自定义全局样式 */
+@layer base {
+  * {
+    @apply transition-colors duration-200;
+  }
+
+  body {
+    @apply font-sans antialiased;
+  }
+
+  /* 自定义滚动条 */
+  ::-webkit-scrollbar {
+    @apply w-2;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-base-200 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-base-300 rounded-full hover:bg-base-content/20;
+  }
+}
+
+@layer components {
+  /* 玻璃态效果 */
+  .glass-effect {
+    @apply backdrop-blur-md bg-white/10 border border-white/20;
+  }
+
+  .glass-dark {
+    @apply backdrop-blur-md bg-black/10 border border-white/10;
+  }
+
+  /* 渐变按钮 */
+  .btn-gradient {
+    @apply bg-gradient-to-r from-primary to-secondary text-primary-content border-0 hover:scale-105 transform transition-all duration-200;
+  }
+
+  /* 消息气泡样式 */
+  .message-bubble-sent {
+    @apply bg-gradient-to-r from-primary to-primary/80 text-primary-content rounded-2xl rounded-br-md shadow-lg;
+  }
+
+  .message-bubble-received {
+    @apply bg-base-200 text-base-content rounded-2xl rounded-bl-md shadow-lg border border-base-300;
+  }
+
+  /* 卡片悬停效果 */
+  .card-hover {
+    @apply transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:scale-[1.02];
+  }
+
+  /* 输入框焦点效果 */
+  .input-focus {
+    @apply focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200;
+  }
+
+  /* 头像发光效果 */
+  .avatar-glow {
+    @apply ring-2 ring-primary/30 ring-offset-2 ring-offset-base-100;
+  }
+
+  /* 在线状态指示器 */
+  .online-indicator {
+    @apply absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-success rounded-full border-2 border-base-100 animate-pulse;
+  }
+
+  /* 加载动画 */
+  .loading-dots {
+    @apply inline-flex space-x-1;
+  }
+
+  .loading-dots > div {
+    @apply w-2 h-2 bg-current rounded-full animate-bounce;
+  }
+
+  .loading-dots > div:nth-child(2) {
+    animation-delay: 0.1s;
+  }
+
+  .loading-dots > div:nth-child(3) {
+    animation-delay: 0.2s;
+  }
+
+  /* 渐变文字 */
+  .text-gradient {
+    @apply bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent;
+  }
+
+  /* 浮动动画 */
+  .float-animation {
+    @apply animate-float;
+  }
+
+  /* 闪烁效果 */
+  .shimmer-effect {
+    @apply relative overflow-hidden;
+  }
+
+  .shimmer-effect::before {
+    @apply absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer;
+    content: "";
+  }
+}
+
+@layer utilities {
+  /* 自定义工具类 */
+  .text-shadow {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .text-shadow-lg {
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  /* 渐变边框 */
+  .border-gradient {
+    @apply border-2 border-transparent bg-gradient-to-r from-primary to-secondary bg-clip-border;
+  }
+
+  /* 模糊背景 */
+  .backdrop-blur-xs {
+    backdrop-filter: blur(2px);
+  }
+}
