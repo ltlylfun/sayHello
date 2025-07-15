@@ -45,6 +45,8 @@ export const getMessages = async (req, res) => {
       .skip(skip)
       .limit(limitNum);
 
+    const reversedMessages = messages.reverse();
+
     const totalPages = Math.ceil(totalMessages / limitNum);
     const hasNextPage = pageNum < totalPages;
     const hasPrevPage = pageNum > 1;
